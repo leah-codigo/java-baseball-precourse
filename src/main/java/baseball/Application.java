@@ -27,13 +27,27 @@ public class Application {
             }
             System.out.println(Arrays.toString(randomNumbersArray)); //향상된 for문 만들기 전 랜덤숫자 확인방법
 
-            Scanner inputNumber = new Scanner(System.in);
+            Scanner inputNumber = new Scanner(System.in); // >> scanner 쓰면 안됨 
 
             while (true) {
                 System.out.print("숫자를 입력해주세요 : ");
                 String inputNumbers = inputNumber.nextLine();
                 for (int i = 0; i < userNumbersArray.length; i++) {
                     userNumbersArray[i] = inputNumbers.charAt(i) - '0'; //?
+
+                    // 3자리 확인
+                    if(inputNumbers.length() != userNumbersArray.length){
+                        throw new IllegalArgumentException();
+                    }
+
+                    // 동일 숫자 확인
+                    for (int j = 0; j < userNumbersArray.length; j++) {
+                        for (int k = i + 1 ; k < userNumbersArray.length; k++) {
+                            if (userNumbersArray[k] == userNumbersArray[j]) {
+                                throw new IllegalArgumentException();
+                            }
+                        }
+                    }
                 }
 
                 strike = 0;
