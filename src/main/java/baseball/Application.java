@@ -1,20 +1,22 @@
 package baseball;
 
-import java.lang.reflect.Array;
 import java.util.*;
+import camp.nextstep.edu.missionutils.Randoms;
+import camp.nextstep.edu.missionutils.Console;
 
 public class Application {
     public static void main(String[] args) {
 
         int[] userNumbersArray = new int[3]; // 유저가 입력한 숫자 배열
-        int[] randomNumbersArray = new int[3]; //랜덤 숫자 배열
+        int[] randomNumbersArray = new int[3];
+
         int strike = 0;
         int ball = 0;
 
         while (true) {
 
-            for (int i = 0; i < randomNumbersArray.length; i++) {
-                randomNumbersArray[i] = (int) (Math.random() * 9 + 1);
+            for (int i = 0; i < 3; i++) {
+                randomNumbersArray[i] = Randoms.pickNumberInRange(1,9);
                 for (int j = 0; j < i; j++) {
                     if (randomNumbersArray[i] == randomNumbersArray[j]) {
                         i--;
@@ -22,33 +24,42 @@ public class Application {
                     }
                 }
             }
+
             for (int n : randomNumbersArray) { // 향상된 for문을 사용해야 마지막값만 담을수있음
                 // System.out.println(n + "");
             }
             System.out.println(Arrays.toString(randomNumbersArray)); //향상된 for문 만들기 전 랜덤숫자 확인방법
 
-            Scanner inputNumber = new Scanner(System.in); // >> scanner 쓰면 안됨 
 
+            //유저한테 숫자 받기
             while (true) {
                 System.out.print("숫자를 입력해주세요 : ");
-                String inputNumbers = inputNumber.nextLine();
-                for (int i = 0; i < userNumbersArray.length; i++) {
-                    userNumbersArray[i] = inputNumbers.charAt(i) - '0'; //?
+                String inputNumbers = Console.readLine();
 
-                    // 3자리 확인
-                    if(inputNumbers.length() != userNumbersArray.length){
+                // 3자리 확인
+                if(inputNumbers.length() != 3) {
+                    throw new IllegalArgumentException();
+                }
+
+                //숫자가 아닌 경우
+                for (int i = 0; i < userNumbersArray.length; i++) {
+                    char numberChar = inputNumbers.charAt(i);
+
+                    if (!Character.isDigit(numberChar)) {
                         throw new IllegalArgumentException();
                     }
+                    userNumbersArray[i] = Character.getNumericValue(numberChar);
+                }
 
                     // 동일 숫자 확인
                     for (int j = 0; j < userNumbersArray.length; j++) {
-                        for (int k = i + 1 ; k < userNumbersArray.length; k++) {
-                            if (userNumbersArray[k] == userNumbersArray[j]) {
+                        for (int k = j + 1 ; k < userNumbersArray.length; k++) {
+                            if (userNumbersArray[j] == userNumbersArray[k]) {
                                 throw new IllegalArgumentException();
                             }
                         }
                     }
-                }
+
 
                 strike = 0;
                 ball = 0;
@@ -83,13 +94,15 @@ public class Application {
             }
 
             System.out.println("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
-            Scanner choiceNumber = new Scanner(System.in);
-            int choice = choiceNumber.nextInt();
+            String choiceInput = Console.readLine();
+            int choice = Integer.parseInt(choiceInput);
 
             if (choice == 1) {
                 continue;
             } else if (choice == 2) {
                 break;
+            } else {
+                throw new IllegalArgumentException();
             }
 
         }
